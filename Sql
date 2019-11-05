@@ -1,0 +1,46 @@
+CREATE TABLE [dbo].[Article]
+(
+	article_id INT PRIMARY KEY IDENTITY(1, 1),
+	name NVARCHAR(1000)
+)
+
+CREATE TABLE [dbo].[Tag]
+(
+	tag_id INT PRIMARY KEY IDENTITY(1, 1),
+	name NVARCHAR(1000)
+)
+
+CREATE TABLE [dbo].[ArticleToTag]
+(
+	article_id INT,
+	tag_id INT,	
+	PRIMARY KEY (article_id, tag_id),
+	FOREIGN KEY (article_id) REFERENCES [dbo].[Article](article_id),
+	FOREIGN KEY (tag_id) REFERENCES [dbo].[Tag](tag_id)
+)
+
+SET IDENTITY_INSERT [dbo].[Article] ON
+
+INSERT INTO [dbo].[Article] (article_id, name) VALUES (1, 'first article'), (2, 'second article'), (3, 'third article')
+
+SET IDENTITY_INSERT [dbo].[Article] OFF
+
+SET IDENTITY_INSERT [dbo].[Tag] ON
+
+INSERT INTO [dbo].[Tag] (tag_id, name) VALUES (1, 'first tag'), (2, 'second tag'), (3, 'third tag')
+
+SET IDENTITY_INSERT [dbo].[Tag] OFF
+
+INSERT INTO [dbo].[ArticleToTag] (article_id, tag_id) VALUES (1, 1), (1, 2), (2, 2)
+
+SELECT
+	a.name [article],
+	t.name [tag]
+	
+	FROM [dbo].[Article] a
+	
+		LEFT JOIN [dbo].[ArticleToTag] att
+			ON a.article_id = att.article_id
+
+		LEFT JOIN [dbo].[Tag] t
+			ON att.tag_id = t.tag_id
